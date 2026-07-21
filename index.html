@@ -1,511 +1,2141 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اوای یقین - دستیار هوشمند مسجد حضرت ابوالفضل (ع)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128330;</text></svg>">
-    <style>
-        /* ============================================
-           Registration Overlay - طراحی شیشه‌ای
-           ============================================ */
-        .registration-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(10, 15, 13, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 20px;
-            animation: fadeInReg 0.6s ease-out;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        @keyframes fadeInReg {
-            from { opacity: 0; backdrop-filter: blur(0px); }
-            to { opacity: 1; backdrop-filter: blur(20px); }
-        }
+<title>اوای یقین | دستیار هوشمند مسجد حضرت ابوالفضل (ع)</title>
 
-        .registration-overlay.hidden {
-            display: none;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-        .registration-box {
-            background: rgba(17, 26, 21, 0.8);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 48px 40px 40px;
-            width: 100%;
-            max-width: 440px;
-            text-align: center;
-            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6), 0 0 120px rgba(26, 92, 58, 0.05);
-            animation: scaleInReg 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+<link rel="stylesheet" href="css/style.css">
 
-        @keyframes scaleInReg {
-            from { opacity: 0; transform: scale(0.92) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+<style>
 
-        .registration-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #1a5c3a, #c9a84c);
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 20px;
-            box-shadow: 0 0 50px rgba(26, 92, 58, 0.3), 0 0 80px rgba(201, 168, 76, 0.08);
-            animation: pulseIcon 3s ease-in-out infinite;
-        }
+:root{
+    --gold:#d4af37;
+    --gold-light:#f5df91;
+    --green:#0b3d2e;
+    --green-light:#145c43;
+    --glass:rgba(255,255,255,.08);
+    --border:rgba(255,255,255,.15);
+    --text:#f5f5f5;
+}
 
-        @keyframes pulseIcon {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(26, 92, 58, 0.3); }
-            50% { transform: scale(1.05); box-shadow: 0 0 80px rgba(201, 168, 76, 0.15); }
-        }
 
-        .registration-title {
-            font-size: 26px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #c9a84c, #e8d5a3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 6px;
-        }
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
 
-        .registration-subtitle {
-            font-size: 13px;
-            color: #5a7a6a;
-            margin-bottom: 6px;
-        }
 
-        .registration-desc {
-            font-size: 14px;
-            color: #8fa89a;
-            margin-bottom: 28px;
-            opacity: 0.8;
-        }
+body{
 
-        .registration-form {
-            text-align: right;
-        }
+    font-family:"Vazirmatn",sans-serif;
 
-        .reg-group {
-            margin-bottom: 18px;
-        }
+    background:
+    radial-gradient(circle at top,#174d39,#06140f 55%);
 
-        .reg-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #e8f0ec;
-            margin-bottom: 6px;
-            opacity: 0.8;
-        }
+    color:white;
 
-        .reg-input {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(26, 38, 32, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            color: #e8f0ec;
-            font-family: inherit;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.4s ease;
-        }
+    min-height:100vh;
 
-        .reg-input:focus {
-            border-color: rgba(201, 168, 76, 0.3);
-            box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.06), 0 0 40px rgba(201, 168, 76, 0.02);
-        }
+    overflow:hidden;
 
-        .reg-input::placeholder {
-            color: #5a7a6a;
-            opacity: 0.6;
-        }
+}
 
-        .reg-error {
-            color: #e74c3c;
-            font-size: 13px;
-            margin-bottom: 14px;
-            min-height: 20px;
-        }
 
-        .reg-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #1a5c3a, #2d8a5e);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
+/* پس زمینه شیشه ای */
 
-        .reg-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, #c9a84c, #1a5c3a);
-            opacity: 0;
-            transition: all 0.4s ease;
-        }
+body::before{
 
-        .reg-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 40px rgba(26, 92, 58, 0.4);
-        }
+content:"";
 
-        .reg-btn:hover::before {
-            opacity: 1;
-        }
+position:fixed;
 
-        .reg-btn span {
-            position: relative;
-            z-index: 1;
-        }
+width:500px;
+height:500px;
 
-        .reg-footer {
-            margin-top: 20px;
-            font-size: 11px;
-            color: #5a7a6a;
-            opacity: 0.6;
-        }
+background:#d4af37;
 
-        .reg-footer span {
-            color: #c9a84c;
-            opacity: 0.8;
-        }
+opacity:.08;
 
-        /* ============================================
-           مدال اعلان همگانی - شیشه‌ای
-           ============================================ */
-        .announcement-modal {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: rgba(17, 26, 21, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(201, 168, 76, 0.15);
-            border-radius: 16px;
-            padding: 20px 28px;
-            max-width: 560px;
-            width: 90%;
-            z-index: 500;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 12px 60px rgba(0, 0, 0, 0.5);
-        }
+filter:blur(120px);
 
-        .announcement-modal.show {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateX(-50%) translateY(0);
-        }
+top:-200px;
+right:-150px;
 
-        .announcement-modal-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
+border-radius:50%;
 
-        .announcement-modal-header .icon {
-            font-size: 20px;
-            color: #c9a84c;
-        }
+}
 
-        .announcement-modal-header .title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #c9a84c;
-        }
 
-        .announcement-modal .close-btn {
-            margin-right: auto;
-            background: rgba(255, 255, 255, 0.05);
-            border: none;
-            color: #5a7a6a;
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
+body::after{
 
-        .announcement-modal .close-btn:hover {
-            background: rgba(231, 76, 60, 0.2);
-            color: #e74c3c;
-        }
+content:"";
 
-        .announcement-modal-body {
-            font-size: 14px;
-            color: #e8f0ec;
-            line-height: 1.8;
-            padding-right: 40px;
-        }
+position:fixed;
 
-        @media (max-width: 768px) {
-            .registration-box { padding: 32px 24px; }
-            .announcement-modal { bottom: 80px; padding: 16px 20px; }
-            .announcement-modal-body { padding-right: 0; }
-        }
-    </style>
-</head>
+width:400px;
+height:400px;
+
+background:#00a86b;
+
+opacity:.08;
+
+filter:blur(120px);
+
+bottom:-150px;
+left:-100px;
+
+border-radius:50%;
+
+}
+
+
+/* ثبت نام */
+
+.registration-overlay{
+
+position:fixed;
+
+inset:0;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:
+rgba(0,0,0,.65);
+
+backdrop-filter:blur(20px);
+
+z-index:9999;
+
+}
+
+
+.registration-box{
+
+width:420px;
+
+max-width:90%;
+
+padding:45px 35px;
+
+border-radius:30px;
+
+background:
+
+linear-gradient(
+145deg,
+rgba(255,255,255,.12),
+rgba(255,255,255,.04)
+);
+
+border:1px solid var(--border);
+
+box-shadow:
+
+0 25px 70px rgba(0,0,0,.6),
+
+inset 0 0 30px rgba(255,255,255,.05);
+
+
+text-align:center;
+
+animation:show .7s ease;
+
+
+}
+
+
+@keyframes show{
+
+from{
+
+opacity:0;
+
+transform:translateY(40px) scale(.9);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+
+
+.registration-icon{
+
+width:90px;
+
+height:90px;
+
+margin:auto;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:45px;
+
+border-radius:30px;
+
+
+background:
+
+linear-gradient(
+135deg,
+#145c43,
+#d4af37
+);
+
+
+box-shadow:
+
+0 0 40px rgba(212,175,55,.4);
+
+}
+
+
+
+.registration-title{
+
+margin-top:20px;
+
+font-size:28px;
+
+font-weight:900;
+
+
+background:
+linear-gradient(
+90deg,
+#fff,
+#d4af37
+);
+
+
+-webkit-background-clip:text;
+
+color:transparent;
+
+
+}
+
+
+.registration-subtitle{
+
+margin-top:8px;
+
+color:#ddd;
+
+font-size:14px;
+
+}
+
+
+
+.registration-desc{
+
+margin:20px 0;
+
+color:#aaa;
+
+font-size:14px;
+
+}
+
+
+
+.reg-group{
+
+text-align:right;
+
+margin-bottom:18px;
+
+}
+
+
+.reg-group label{
+
+display:block;
+
+margin-bottom:7px;
+
+font-size:13px;
+
+color:#ddd;
+
+}
+
+
+
+.reg-input{
+
+
+width:100%;
+
+padding:15px 18px;
+
+border-radius:15px;
+
+background:
+
+rgba(255,255,255,.08);
+
+
+border:
+
+1px solid rgba(255,255,255,.15);
+
+
+color:white;
+
+font-family:inherit;
+
+outline:none;
+
+
+transition:.3s;
+
+
+}
+
+
+
+.reg-input:focus{
+
+border-color:var(--gold);
+
+box-shadow:
+
+0 0 20px rgba(212,175,55,.25);
+
+}
+
+
+
+.reg-btn{
+
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+border-radius:18px;
+
+
+background:
+
+linear-gradient(
+135deg,
+#145c43,
+#d4af37
+);
+
+
+color:white;
+
+font-family:inherit;
+
+font-weight:800;
+
+font-size:16px;
+
+cursor:pointer;
+
+transition:.3s;
+
+
+}
+
+
+
+.reg-btn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+
+0 15px 30px rgba(212,175,55,.3);
+
+}
+
+
+
+.reg-footer{
+
+margin-top:20px;
+
+font-size:12px;
+
+color:#aaa;
+
+}
+
+
+
+
+.hidden{
+
+display:none!important;
+
+}
+
+
+
+/* ساختار اصلی */
+
+
+.app-container{
+
+
+display:flex;
+
+height:100vh;
+
+padding:18px;
+
+gap:18px;
+
+
+}
+
+
+/* سایدبار */
+
+
+.sidebar{
+
+
+width:310px;
+
+
+background:
+
+rgba(255,255,255,.07);
+
+
+backdrop-filter:blur(25px);
+
+
+border:
+
+1px solid var(--border);
+
+
+border-radius:30px;
+
+
+display:flex;
+
+flex-direction:column;
+
+
+box-shadow:
+
+0 20px 50px rgba(0,0,0,.3);
+
+
+overflow:hidden;
+
+
+}
+
+
+
+.sidebar-header{
+
+
+padding:30px 20px;
+
+text-align:center;
+
+
+border-bottom:
+
+1px solid rgba(255,255,255,.1);
+
+
+}
+
+
+
+.logo-icon{
+
+width:75px;
+
+height:75px;
+
+margin:auto;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+font-size:38px;
+
+
+border-radius:25px;
+
+
+background:
+
+linear-gradient(
+135deg,
+#145c43,
+#d4af37
+);
+
+
+box-shadow:
+
+0 0 30px rgba(212,175,55,.3);
+
+
+}
+
+
+
+.logo-text{
+
+
+font-size:30px;
+
+font-weight:900;
+
+margin-top:15px;
+
+
+background:
+
+linear-gradient(
+90deg,
+#fff,
+#d4af37
+);
+
+
+-webkit-background-clip:text;
+
+color:transparent;
+
+
+}
+
+
+
+.logo-subtitle{
+
+
+font-size:12px;
+
+color:#bbb;
+
+margin-top:8px;
+
+
+}
+
+
+/* دکمه گفتگو */
+
+
+.new-chat-btn{
+
+
+margin:20px;
+
+padding:15px;
+
+border-radius:18px;
+
+
+border:
+
+1px solid rgba(255,255,255,.15);
+
+
+background:
+
+rgba(255,255,255,.08);
+
+
+color:white;
+
+
+font-family:inherit;
+
+
+font-weight:700;
+
+
+cursor:pointer;
+
+
+transition:.3s;
+
+
+}
+
+
+.new-chat-btn:hover{
+
+
+background:
+
+rgba(212,175,55,.2);
+
+
+transform:translateY(-3px);
+
+
+}
+
+
+
+.chat-history{
+
+flex:1;
+
+padding:20px;
+
+overflow:auto;
+
+
+}
+
+
+.history-title{
+
+color:#aaa;
+
+font-size:13px;
+
+margin-bottom:15px;
+
+
+}
+
+
+
+.sidebar-footer{
+
+
+padding:20px;
+
+font-size:12px;
+
+color:#aaa;
+
+text-align:center;
+
+
+background:
+
+rgba(0,0,0,.15);
+
+
+}
+
+
+.footer-info{
+
+margin:8px 0;
+
+}
+
+<style>
+
+.main-area{
+
+flex:1;
+
+display:flex;
+
+flex-direction:column;
+
+
+background:
+
+rgba(255,255,255,.06);
+
+
+border:
+
+1px solid rgba(255,255,255,.15);
+
+
+border-radius:30px;
+
+
+backdrop-filter:blur(25px);
+
+
+overflow:hidden;
+
+
+box-shadow:
+
+0 20px 60px rgba(0,0,0,.35);
+
+
+}
+
+
+
+/* نوار بالا */
+
+
+.top-bar{
+
+
+height:75px;
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:space-between;
+
+
+padding:0 25px;
+
+
+border-bottom:
+
+1px solid rgba(255,255,255,.12);
+
+
+
+background:
+
+rgba(255,255,255,.04);
+
+
+}
+
+
+
+.top-bar-left{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+}
+
+
+
+.menu-toggle{
+
+
+width:45px;
+
+height:45px;
+
+border-radius:15px;
+
+
+border:
+
+1px solid rgba(255,255,255,.15);
+
+
+background:
+
+rgba(255,255,255,.08);
+
+
+color:white;
+
+
+cursor:pointer;
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+}
+
+
+
+.menu-toggle svg{
+
+width:22px;
+
+}
+
+
+
+.model-selector{
+
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+
+padding:12px 18px;
+
+
+border-radius:18px;
+
+
+border:
+
+1px solid rgba(255,255,255,.15);
+
+
+background:
+
+rgba(255,255,255,.08);
+
+
+color:white;
+
+
+font-family:inherit;
+
+
+font-weight:700;
+
+
+}
+
+
+
+.model-selector svg{
+
+width:20px;
+
+}
+
+
+
+/* بخش گفتگو */
+
+
+.chat-container{
+
+
+flex:1;
+
+
+overflow-y:auto;
+
+
+padding:35px;
+
+
+scroll-behavior:smooth;
+
+
+}
+
+
+
+.welcome-screen{
+
+
+height:100%;
+
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+
+text-align:center;
+
+
+}
+
+
+
+.welcome-logo{
+
+
+width:120px;
+
+height:120px;
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+font-size:65px;
+
+
+border-radius:40px;
+
+
+background:
+
+linear-gradient(
+135deg,
+#145c43,
+#d4af37
+);
+
+
+
+box-shadow:
+
+0 0 60px rgba(212,175,55,.35);
+
+
+
+animation:
+
+float 4s infinite ease-in-out;
+
+
+}
+
+
+
+@keyframes float{
+
+
+50%{
+
+transform:translateY(-15px);
+
+}
+
+
+}
+
+
+
+.welcome-title{
+
+
+font-size:48px;
+
+font-weight:900;
+
+
+margin-top:25px;
+
+
+background:
+
+linear-gradient(
+90deg,
+#fff,
+#d4af37
+);
+
+
+-webkit-background-clip:text;
+
+color:transparent;
+
+
+}
+
+
+
+.welcome-subtitle{
+
+
+font-size:18px;
+
+color:#ccc;
+
+
+margin-top:10px;
+
+
+}
+
+
+
+/* کارت های پیشنهاد */
+
+
+.suggestion-cards{
+
+
+display:grid;
+
+
+grid-template-columns:
+
+repeat(2,250px);
+
+
+gap:20px;
+
+
+margin-top:45px;
+
+
+}
+
+
+
+.suggestion-card{
+
+
+padding:22px;
+
+
+border-radius:25px;
+
+
+background:
+
+rgba(255,255,255,.08);
+
+
+border:
+
+1px solid rgba(255,255,255,.15);
+
+
+cursor:pointer;
+
+
+transition:.35s;
+
+
+text-align:right;
+
+
+}
+
+
+
+.suggestion-card:hover{
+
+
+transform:
+
+translateY(-8px);
+
+
+background:
+
+rgba(212,175,55,.15);
+
+
+border-color:
+
+rgba(212,175,55,.5);
+
+
+
+}
+
+
+
+.suggestion-card-title{
+
+
+font-weight:800;
+
+font-size:15px;
+
+
+margin-bottom:10px;
+
+
+}
+
+
+
+.suggestion-card-desc{
+
+
+font-size:12px;
+
+color:#aaa;
+
+
+}
+
+
+
+
+/* ورودی پیام */
+
+
+.input-container{
+
+
+padding:20px 30px;
+
+
+background:
+
+rgba(0,0,0,.15);
+
+
+
+}
+
+
+
+.input-wrapper{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:15px;
+
+
+padding:10px 15px;
+
+
+border-radius:25px;
+
+
+background:
+
+rgba(255,255,255,.09);
+
+
+border:
+
+1px solid rgba(255,255,255,.18);
+
+
+backdrop-filter:blur(20px);
+
+
+}
+
+
+
+.chat-input{
+
+
+flex:1;
+
+
+resize:none;
+
+
+max-height:120px;
+
+
+background:transparent;
+
+
+border:none;
+
+
+outline:none;
+
+
+color:white;
+
+
+font-family:inherit;
+
+
+font-size:15px;
+
+
+padding:12px;
+
+
+}
+
+
+
+.chat-input::placeholder{
+
+
+color:#999;
+
+
+}
+
+
+
+.input-actions{
+
+
+display:flex;
+
+align-items:center;
+
+
+}
+
+
+
+.send-btn{
+
+
+width:55px;
+
+height:55px;
+
+
+border:none;
+
+
+border-radius:50%;
+
+
+background:
+
+linear-gradient(
+135deg,
+#145c43,
+#d4af37
+);
+
+
+
+color:white;
+
+
+cursor:pointer;
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+transition:.3s;
+
+
+}
+
+
+
+.send-btn:hover{
+
+
+transform:rotate(-10deg) scale(1.1);
+
+
+box-shadow:
+
+0 0 25px rgba(212,175,55,.4);
+
+
+}
+
+
+
+.send-btn svg{
+
+
+width:25px;
+
+
+}
+
+
+
+
+/* پیام های چت */
+
+
+.message{
+
+
+display:flex;
+
+margin-bottom:25px;
+
+
+animation:
+
+messageIn .4s ease;
+
+
+}
+
+
+
+@keyframes messageIn{
+
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+
+}
+
+
+
+.message.user{
+
+
+justify-content:flex-start;
+
+
+}
+
+
+
+.message.ai{
+
+
+justify-content:flex-end;
+
+
+}
+
+
+
+.message-content{
+
+
+max-width:75%;
+
+
+padding:18px 22px;
+
+
+border-radius:25px;
+
+
+line-height:2;
+
+
+font-size:15px;
+
+
+}
+
+
+
+.message.user .message-content{
+
+
+background:
+
+linear-gradient(
+135deg,
+#145c43,
+#0b2d22
+);
+
+
+border-bottom-left-radius:5px;
+
+
+}
+
+
+
+.message.ai .message-content{
+
+
+background:
+
+rgba(255,255,255,.09);
+
+
+border:
+
+1px solid rgba(255,255,255,.15);
+
+
+border-bottom-right-radius:5px;
+
+
+}
+
+
+
+/* اسکرول بار */
+
+
+::-webkit-scrollbar{
+
+width:8px;
+
+}
+
+
+
+::-webkit-scrollbar-track{
+
+background:transparent;
+
+}
+
+
+
+::-webkit-scrollbar-thumb{
+
+
+background:
+
+rgba(212,175,55,.5);
+
+
+border-radius:20px;
+
+
+}
+
+
+
+
+/* موبایل */
+
+
+@media(max-width:900px){
+
+
+.app-container{
+
+padding:10px;
+
+}
+
+
+.sidebar{
+
+
+position:fixed;
+
+right:10px;
+
+top:10px;
+
+bottom:10px;
+
+
+transform:translateX(120%);
+
+
+z-index:100;
+
+
+}
+
+
+.sidebar.active{
+
+transform:translateX(0);
+
+}
+
+
+.main-area{
+
+border-radius:20px;
+
+}
+
+
+
+.suggestion-cards{
+
+
+grid-template-columns:1fr;
+
+
+width:100%;
+
+
+}
+
+
+
+.welcome-title{
+
+font-size:34px;
+
+}
+
+
+.chat-container{
+
+padding:20px;
+
+}
+
+
+.message-content{
+
+max-width:90%;
+
+}
+
+
+
+}
+
+
+
+</style>
 <body>
 
-    <!-- ============================================
-    USER REGISTRATION OVERLAY - شیشه‌ای
-    ============================================ -->
-    <div class="registration-overlay" id="registration-overlay">
-        <div class="registration-box">
-            <div class="registration-icon">🕌</div>
-            <div class="registration-title">به اوای یقین خوش آمدید</div>
-            <div class="registration-subtitle">دستیار هوشمند مسجد حضرت ابوالفضل (ع)</div>
-            <div class="registration-desc">لطفاً برای شروع گفتگو، اطلاعات خود را وارد کنید</div>
-            <div class="registration-form">
-                <div class="reg-group">
-                    <label>نام و نام خانوادگی</label>
-                    <input type="text" class="reg-input" id="reg-name" placeholder="مثال: محمد رضایی">
-                </div>
-                <div class="reg-group">
-                    <label>شماره تماس</label>
-                    <input type="tel" class="reg-input" id="reg-phone" placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹">
-                </div>
-                <div class="reg-error" id="reg-error"></div>
-                <button class="reg-btn" id="reg-btn" type="button">
-                    <span>🚀 شروع گفتگو</span>
-                </button>
-            </div>
-            <div class="reg-footer">
-                <span>🕌</span> مسجد حضرت ابوالفضل (ع) - رودان، هرمزگان
-            </div>
-        </div>
-    </div>
 
-    <!-- ============================================
-    ANNOUNCEMENT MODAL - اعلان همگانی
-    ============================================ -->
-    <div class="announcement-modal" id="announcement-modal">
-        <div class="announcement-modal-header">
-            <span class="icon">📢</span>
-            <span class="title">اعلان</span>
-            <button class="close-btn" id="announcement-close">✕</button>
-        </div>
-        <div class="announcement-modal-body" id="announcement-body">
-            <!-- محتوای اعلان از سرور میاد -->
-        </div>
-    </div>
+<!-- پنجره ثبت نام -->
 
-    <!-- ============================================
-    MAIN APP
-    ============================================ -->
-    <div class="app-container">
+<div class="registration-overlay" id="registration-overlay">
 
-        <!-- SIDEBAR - شیشه‌ای -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="logo-container">
-                    <div class="logo-icon">🕌</div>
-                    <div class="logo-text">اوای یقین</div>
-                </div>
-                <div class="logo-subtitle">دستیار هوشمند مسجد حضرت ابوالفضل (ع)</div>
-            </div>
+<div class="registration-box">
 
-            <button class="new-chat-btn" id="new-chat-btn" type="button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                گفتگوی جدید
-            </button>
 
-            <div class="chat-history" id="chat-history">
-                <div class="history-title">📜 تاریخچه گفتگوها</div>
-            </div>
+<div class="registration-icon">
+🕌
+</div>
 
-            <div class="sidebar-footer">
-                <div class="footer-info">طراحی و توسعه: امیر صالح جاودان</div>
-                <div class="footer-info">زیر نظر: قرارگاه فرهنگی 313</div>
-                <div class="footer-info">🕌 مسجد حضرت ابوالفضل (ع) - رودان</div>
-            </div>
-        </aside>
 
-        <!-- MAIN CHAT AREA -->
-        <main class="main-area">
+<div class="registration-title">
+به اوای یقین خوش آمدید
+</div>
 
-            <!-- TOP BAR - شیشه‌ای -->
-            <header class="top-bar">
-                <div class="top-bar-left">
-                    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="منو">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="3" y1="12" x2="21" y2="12"/>
-                            <line x1="3" y1="6" x2="21" y2="6"/>
-                            <line x1="3" y1="18" x2="21" y2="18"/>
-                        </svg>
-                    </button>
-                    <button class="model-selector" type="button" id="model-selector">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 16v-4"/>
-                            <path d="M12 8h.01"/>
-                        </svg>
-                        <span id="model-name">اوای یقین</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="top-bar-right">
-                    <!-- وضعیت آنلاین -->
-                    <span style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;">
-                        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#27ae60;box-shadow:0 0 20px rgba(39,174,96,0.4);animation:pulseDot 2s ease-in-out infinite;"></span>
-                        آنلاین
-                    </span>
-                </div>
-            </header>
 
-            @keyframes pulseDot {
-                0%, 100% { opacity: 1; transform: scale(1); }
-                50% { opacity: 0.5; transform: scale(0.8); }
-            }
+<div class="registration-subtitle">
+دستیار هوشمند مسجد حضرت ابوالفضل (ع)
+</div>
 
-            <!-- CHAT CONTAINER -->
-            <div class="chat-container" id="chat-container">
 
-                <!-- WELCOME SCREEN -->
-                <div class="welcome-screen" id="welcome-screen">
-                    <div class="welcome-logo">🕌</div>
-                    <h1 class="welcome-title">اوای یقین</h1>
-                    <p class="welcome-subtitle">دستیار هوشمند مسجد حضرت ابوالفضل (ع)</p>
-                    <div class="suggestion-cards">
-                        <div class="suggestion-card">
-                            <div class="suggestion-card-title">📖 احکام نماز را به من بگو</div>
-                            <div class="suggestion-card-desc">شرایط، ارکان و احکام نماز</div>
-                        </div>
-                        <div class="suggestion-card">
-                            <div class="suggestion-card-title">🤲 دعای روزانه معرفی کن</div>
-                            <div class="suggestion-card-desc">دعاهای مخصوص صبح و شب</div>
-                        </div>
-                        <div class="suggestion-card">
-                            <div class="suggestion-card-title">📜 آیه ۲۵۵ بقره را تفسیر کن</div>
-                            <div class="suggestion-card-desc">تفسیر آیه الکرسی</div>
-                        </div>
-                        <div class="suggestion-card">
-                            <div class="suggestion-card-title">🌿 داستان زندگی امام علی (ع)</div>
-                            <div class="suggestion-card-desc">سیره اهل بیت (ع)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="registration-desc">
+برای شروع گفتگو لطفاً اطلاعات خود را وارد کنید
+</div>
 
-            <!-- INPUT AREA - شیشه‌ای -->
-            <div class="input-container">
-                <div class="input-wrapper">
-                    <textarea class="chat-input" id="chat-input" placeholder="پیام خود را بنویسید..." rows="1"></textarea>
-                    <div class="input-actions">
-                        <button class="send-btn" id="send-btn" type="button" aria-label="ارسال">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="22" y1="2" x2="11" y2="13"/>
-                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <!-- فوتر خالی - بدون متن هشدار -->
-                <div class="input-footer"></div>
-            </div>
 
-        </main>
-    </div>
 
-    <!-- ============================================
-    SCRIPTS
-    ============================================ -->
-    <script src="js/config.js"></script>
-    <script src="js/chat.js"></script>
+<div class="reg-group">
 
-    <script>
-    // ============================================
-    // اعلان همگانی - دریافت از سرور
-    // ============================================
-    (function() {
-        const API_URL = 'https://amirsalh123.salhamir146.workers.dev';
+<label>
+نام و نام خانوادگی
+</label>
 
-        async function fetchAnnouncement() {
-            try {
-                const response = await fetch(`${API_URL}/api/announcement`);
-                const data = await response.json();
+<input 
+class="reg-input"
+id="reg-name"
+type="text"
+placeholder="مثال: علی احمدی">
 
-                if (data.message) {
-                    const modal = document.getElementById('announcement-modal');
-                    const body = document.getElementById('announcement-body');
-                    body.textContent = data.message;
-                    modal.classList.add('show');
 
-                    // ذخیره در localStorage تا دوباره نشون نده
-                    localStorage.setItem('oay_last_announcement', JSON.stringify({
-                        message: data.message,
-                        timestamp: Date.now()
-                    }));
-                }
-            } catch(e) {
-                console.log('Announcement fetch error:', e);
-            }
-        }
+</div>
 
-        // بستن اعلان
-        document.getElementById('announcement-close').addEventListener('click', function() {
-            document.getElementById('announcement-modal').classList.remove('show');
-        });
 
-        // بررسی اعلان قبلی
-        const lastAnn = localStorage.getItem('oay_last_announcement');
-        if (lastAnn) {
-            try {
-                const data = JSON.parse(lastAnn);
-                // اگر کمتر از 1 ساعت گذشته، نشون نده
-                if (Date.now() - data.timestamp < 3600000) {
-                    // اعلان قبلی رو نشون بده
-                    const modal = document.getElementById('announcement-modal');
-                    const body = document.getElementById('announcement-body');
-                    body.textContent = data.message;
-                    modal.classList.add('show');
-                } else {
-                    fetchAnnouncement();
-                }
-            } catch(e) {
-                fetchAnnouncement();
-            }
-        } else {
-            fetchAnnouncement();
-        }
-    })();
-    </script>
+
+<div class="reg-group">
+
+<label>
+شماره تماس
+</label>
+
+
+<input 
+class="reg-input"
+id="reg-phone"
+type="tel"
+placeholder="مثال: 09123456789">
+
+
+</div>
+
+
+
+<div 
+class="reg-error"
+id="reg-error">
+</div>
+
+
+
+<button 
+class="reg-btn"
+id="reg-btn">
+
+ثبت و شروع گفتگو
+
+</button>
+
+
+
+<div class="reg-footer">
+
+مسجد حضرت ابوالفضل (ع)  
+<br>
+رودان - هرمزگان
+
+</div>
+
+
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="app-container">
+
+
+
+<!-- سایدبار -->
+
+<aside class="sidebar" id="sidebar">
+
+
+
+<div class="sidebar-header">
+
+
+<div class="logo-icon">
+🕌
+</div>
+
+
+<div class="logo-text">
+اوای یقین
+</div>
+
+
+<div class="logo-subtitle">
+دستیار هوشمند مذهبی
+</div>
+
+
+</div>
+
+
+
+
+
+<button 
+class="new-chat-btn"
+id="new-chat-btn">
+
+
+＋
+گفتگوی جدید
+
+
+</button>
+
+
+
+
+
+<div class="chat-history" id="chat-history">
+
+
+<div class="history-title">
+تاریخچه گفتگوها
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="sidebar-footer">
+
+
+<div class="footer-info">
+طراحی و توسعه: امیر صالح جاودان
+</div>
+
+
+<div class="footer-info">
+زیر نظر قرارگاه فرهنگی 313
+</div>
+
+
+<div class="footer-info">
+مسجد حضرت ابوالفضل (ع)
+</div>
+
+
+
+</div>
+
+
+
+</aside>
+
+
+
+
+
+
+
+<!-- بخش اصلی -->
+
+
+<main class="main-area">
+
+
+
+<header class="top-bar">
+
+
+
+<div class="top-bar-left">
+
+
+<button 
+class="menu-toggle"
+id="menu-toggle">
+
+
+<svg viewBox="0 0 24 24">
+
+<line x1="3" y1="6" x2="21" y2="6"/>
+<line x1="3" y1="12" x2="21" y2="12"/>
+<line x1="3" y1="18" x2="21" y2="18"/>
+
+
+</svg>
+
+
+</button>
+
+
+
+
+
+<button class="model-selector">
+
+
+🕌
+
+اوای یقین
+
+⌄
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+</header>
+
+
+
+
+
+
+
+<!-- محل پیام ها -->
+
+
+<div 
+class="chat-container"
+id="chat-container">
+
+
+
+
+
+<div 
+class="welcome-screen"
+id="welcome-screen">
+
+
+
+<div class="welcome-logo">
+🕌
+</div>
+
+
+
+<h1 class="welcome-title">
+اوای یقین
+</h1>
+
+
+
+<p class="welcome-subtitle">
+دستیار هوشمند مسجد حضرت ابوالفضل (ع)
+</p>
+
+
+
+
+
+<div class="suggestion-cards">
+
+
+
+<div class="suggestion-card">
+
+<div class="suggestion-card-title">
+احکام نماز چیست؟
+</div>
+
+<div class="suggestion-card-desc">
+شرایط و ارکان نماز
+</div>
+
+</div>
+
+
+
+
+
+<div class="suggestion-card">
+
+<div class="suggestion-card-title">
+دعای روزانه معرفی کن
+</div>
+
+<div class="suggestion-card-desc">
+دعاهای صبح و شب
+</div>
+
+</div>
+
+
+
+
+
+<div class="suggestion-card">
+
+<div class="suggestion-card-title">
+تفسیر آیه الکرسی
+</div>
+
+<div class="suggestion-card-desc">
+معارف قرآن کریم
+</div>
+
+</div>
+
+
+
+
+
+<div class="suggestion-card">
+
+<div class="suggestion-card-title">
+زندگی امام علی (ع)
+</div>
+
+<div class="suggestion-card-desc">
+سیره اهل بیت (ع)
+</div>
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ارسال پیام -->
+
+
+<div class="input-container">
+
+
+<div class="input-wrapper">
+
+
+
+<textarea
+
+id="chat-input"
+
+class="chat-input"
+
+rows="1"
+
+placeholder="پیام خود را بنویسید...">
+
+</textarea>
+
+
+
+
+<div class="input-actions">
+
+
+<button
+
+id="send-btn"
+
+class="send-btn">
+
+
+<svg viewBox="0 0 24 24">
+
+<line x1="22" y1="2" x2="11" y2="13"/>
+
+<polygon points="22 2 15 22 11 13 2 9 22 2"/>
+
+
+</svg>
+
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</main>
+
+
+</div>
+
+
+
+
+
+<script src="js/config.js"></script>
+
+<script src="js/chat.js"></script>
+
+
+<script>
+
+
+// ثبت نام کاربر
+
+const registerBtn =
+document.getElementById("reg-btn");
+
+
+registerBtn.onclick=function(){
+
+
+let name =
+document.getElementById("reg-name").value.trim();
+
+
+let phone =
+document.getElementById("reg-phone").value.trim();
+
+
+let error =
+document.getElementById("reg-error");
+
+
+
+if(name.length < 3){
+
+error.innerHTML =
+"لطفاً نام کامل را وارد کنید";
+
+return;
+
+}
+
+
+
+if(phone.length < 10){
+
+error.innerHTML =
+"شماره تماس صحیح نیست";
+
+return;
+
+}
+
+
+
+
+localStorage.setItem(
+"oay_user",
+JSON.stringify({
+
+name:name,
+
+phone:phone,
+
+date:new Date()
+
+})
+
+);
+
+
+
+document
+.getElementById("registration-overlay")
+.classList.add("hidden");
+
+
+
+};
+
+
+
+
+
+// بررسی ورود قبلی
+
+
+window.onload=function(){
+
+
+let user =
+localStorage.getItem("oay_user");
+
+
+if(user){
+
+
+document
+.getElementById("registration-overlay")
+.classList.add("hidden");
+
+
+}
+
+
+
+};
+
+
+
+
+
+// منوی موبایل
+
+
+document
+.getElementById("menu-toggle")
+.onclick=function(){
+
+
+document
+.getElementById("sidebar")
+.classList.toggle("active");
+
+
+};
+
+
+
+
+
+// کارت های پیشنهادی
+
+
+document
+.querySelectorAll(".suggestion-card")
+.forEach(card=>{
+
+
+card.onclick=function(){
+
+
+document
+.getElementById("chat-input")
+.value =
+this.querySelector(".suggestion-card-title").innerText;
+
+
+document
+.getElementById("chat-input")
+.focus();
+
+
+};
+
+
+});
+
+
+
+</script>
+
 
 </body>
+
 </html>
