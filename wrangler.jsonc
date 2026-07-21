@@ -1,9 +1,11 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "amirsalh12",
-  "main": "_worker.js",
+  "main": "worker.js",
   "compatibility_date": "2026-07-20",
   "assets": {
     "directory": "./"
+  },
+  "vars": {
+    "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"
   }
 }
