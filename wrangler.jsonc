@@ -1,20 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "amirsalh12",
-  "main": "_worker.js",
+  "main": "worker.js",
   "compatibility_date": "2026-07-20",
   "assets": {
-    "directory": "./",
-    "not_found_handling": "single-page-application",
-    "exclude": [
-      "node_modules",
-      ".git",
-      ".wrangler",
-      "package.json",
-      "package-lock.json",
-      "bun.lockb",
-      "*.log",
-      ".DS_Store"
-    ]
+    "directory": "./"
   }
 }
