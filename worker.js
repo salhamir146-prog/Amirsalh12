@@ -1,7 +1,4 @@
-// ============================================
-// اوای یقین - Cloudflare Worker Proxy
-// مسجد حضرت ابوالفضل (ع)
-// ============================================
+// Cloudflare Worker - Proxy for Oay Yaqin AI
 
 export default {
   async fetch(request, env) {
@@ -17,12 +14,9 @@ export default {
       });
     }
 
-
     if (request.method !== "POST") {
       return new Response(
-        JSON.stringify({
-          error: "Only POST requests are allowed"
-        }),
+        JSON.stringify({ error: "Method not allowed" }),
         {
           status: 405,
           headers: {
@@ -33,116 +27,105 @@ export default {
       );
     }
 
-
     try {
 
-      const data = await request.json();
+      const body = await request.json();
 
+      const provider = body.provider || "groq";
+      const apiUrl = body.apiUrl;
+      const apiKey = body.apiKey;
+      const requestBody = body.requestBody;
+      const customHeaders = body.headers || {};
 
-      const apiUrl =
-        data.apiUrl ||
-        "https://api.groq.com/openai/v1/chat/completions";
+      let finalApiKey = apiKey;
 
+      if (!finalApiKey) {
+        switch (provider) {
+          case "groq":
+            finalApiKey = env.GROQ_API_KEY;
+            break;
 
-      const requestBody =
-        data.requestBody;
+          case "openai":
+            finalApiKey = env.OPENAI_API_KEY;
+            break;
 
+          case "anthropic":
+            finalApiKey = env.ANTHROPIC_API_KEY;
+            break;
 
-      if (!requestBody) {
+          case "google":
+            finalApiKey = env.GOOGLE_API_KEY;
+            break;
+        }
+      }
+
+      if (!finalApiKey) {
         return new Response(
           JSON.stringify({
-            error: "Request body missing"
+            error: "API Key not found."
           }),
           {
-            status:400,
-            headers:{
-              "Content-Type":"application/json",
-              "Access-Control-Allow-Origin":"*"
+            status: 400,
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
             }
           }
         );
       }
 
+      const fetchHeaders = {
+        "Content-Type": "application/json"
+      };
 
-
-      // گرفتن کلید از Cloudflare Variables
-      const apiKey = env.GROQ_API_KEY;
-
-
-      if (!apiKey) {
-
-        return new Response(
-          JSON.stringify({
-            error:"GROQ_API_KEY not configured"
-          }),
-          {
-            status:500,
-            headers:{
-              "Content-Type":"application/json",
-              "Access-Control-Allow-Origin":"*"
-            }
-          }
-        );
-
+      if (provider === "anthropic") {
+        fetchHeaders["x-api-key"] = finalApiKey;
+        fetchHeaders["anthropic-version"] = "2023-06-01";
       }
 
+      else if (provider !== "google") {
+        fetchHeaders["Authorization"] = "Bearer " + finalApiKey;
+      }
 
+      Object.assign(fetchHeaders, customHeaders);
 
-      const response = await fetch(
-        apiUrl,
-        {
-          method:"POST",
+      // فقط یک بار تعریف می‌شود
+      let targetUrl = apiUrl;
 
-          headers:{
-            "Content-Type":"application/json",
-            "Authorization":
-              "Bearer " + apiKey
-          },
+      if (provider === "google") {
+        const separator = apiUrl.includes("?") ? "&" : "?";
+        targetUrl = apiUrl + separator + "key=" + finalApiKey;
+      }
 
-          body:
-            JSON.stringify(requestBody)
+      const response = await fetch(targetUrl, {
+        method: "POST",
+        headers: fetchHeaders,
+        body: JSON.stringify(requestBody)
+      });
+
+      const data = await response.text();
+
+      return new Response(data, {
+        status: response.status,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
         }
-      );
+      });
 
-
-
-      const result =
-        await response.text();
-
-
+    } catch (err) {
 
       return new Response(
-        result,
-        {
-          status:response.status,
-
-          headers:{
-            "Content-Type":"application/json",
-            "Access-Control-Allow-Origin":"*"
-          }
-        }
-      );
-
-
-
-    } catch(error){
-
-
-      return new Response(
-
         JSON.stringify({
-          error:error.message
+          error: err.message
         }),
-
         {
-          status:500,
-
-          headers:{
-            "Content-Type":"application/json",
-            "Access-Control-Allow-Origin":"*"
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
           }
         }
-
       );
 
     }
