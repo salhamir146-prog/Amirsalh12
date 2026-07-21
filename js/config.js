@@ -15,8 +15,9 @@ const CONFIG = {
 
     // === تنظیمات Proxy ===
     // Cloudflare Pages Worker
-    USE_PROXY: true,
-    PROXY_URL: '/api/chat',
+  // === تنظیمات Proxy ===
+USE_PROXY: true,
+PROXY_URL: 'https://amirsalh12.salhamir146.workers.dev',
 
     // === پیکربندی API ها ===
     PROVIDERS: {
@@ -88,10 +89,10 @@ const CONFIG = {
 
     // === تنظیمات پیش‌فرض API ===
     DEFAULT_PROVIDER: 'groq',
-    DEFAULT_API_KEY: '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',
-    DEFAULT_MODEL: 'llama-3.3-70b-versatile',
-    DEFAULT_URL: 'https://api.groq.com/openai/v1/chat/completions',
-
+DEFAULT_API_KEY: '',
+DEFAULT_MODEL: 'llama-3.3-70b-versatile',
+DEFAULT_URL: 'https://api.groq.com/openai/v1/chat/completions',
+    
     // === تنظیمات پیش‌فرض پارامترها ===
     DEFAULT_TEMPERATURE: 0.7,
     DEFAULT_MAX_TOKENS: 2048,
