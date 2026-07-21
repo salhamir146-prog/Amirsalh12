@@ -1,5 +1,3 @@
 node_modules
-.git
 .wrangler
-package-lock.json
-bun.lock
+.git
