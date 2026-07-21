@@ -1,6 +1,6 @@
 {
   "name": "oay-yaqin",
-  "main": "_worker.js",
+  "main": "worker.js",
   "compatibility_date": "2026-07-20",
   "assets": {
     "directory": "."
