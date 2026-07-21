@@ -1,85 +1,232 @@
-// Cloudflare Worker - Proxy for Oay Yaqin AI
+// ============================================
+// اوای یقین - Cloudflare Worker
+// AI Proxy + Users + Chat Storage
+// ============================================
+
 export default {
-    async fetch(request, env, ctx) {
-        // CORS
-        if (request.method === 'OPTIONS') {
-            return new Response(null, {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type',
-                }
-            });
-        }
+  async fetch(request, env) {
 
-        if (request.method !== 'POST') {
-            return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-                status: 405,
-                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-            });
-        }
-
-        try {
-            const body = await request.json();
-            const { provider, apiUrl, apiKey, requestBody, headers } = body;
-
-            let finalApiKey = apiKey;
-            if (!finalApiKey) {
-                switch (provider) {
-                    case 'groq': finalApiKey = env.GROQ_API_KEY; break;
-                    case 'openai': finalApiKey = env.OPENAI_API_KEY; break;
-                    case 'anthropic': finalApiKey = env.ANTHROPIC_API_KEY; break;
-                    case 'google': finalApiKey = env.GOOGLE_API_KEY; break;
-                }
-            }
-
-            if (!finalApiKey) {
-                return new Response(JSON.stringify({ error: 'API Key not found' }), {
-                    status: 400,
-                    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-                });
-            }
-
-            const fetchHeaders = { 'Content-Type': 'application/json' };
-            let finalUrl = apiUrl;
-
-            if (provider === 'anthropic') {
-                fetchHeaders['x-api-key'] = finalApiKey;
-                fetchHeaders['anthropic-version'] = '2023-06-01';
-            } else if (provider === 'google') {
-                const separator = apiUrl.includes('?') ? '&' : '?';
-                finalUrl = apiUrl + separator + 'key=' + finalApiKey;
-            } else {
-                fetchHeaders['Authorization'] = 'Bearer ' + finalApiKey;
-            }
-
-            if (headers) {
-                for (const key in headers) {
-                    fetchHeaders[key] = headers[key];
-                }
-            }
-
-            const response = await fetch(finalUrl, {
-                method: 'POST',
-                headers: fetchHeaders,
-                body: JSON.stringify(requestBody)
-            });
-
-            const text = await response.text();
-
-            return new Response(text, {
-                status: response.status,
-                headers: {
-                    'Content-Type': response.headers.get('Content-Type') || 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                }
-            });
-
-        } catch (error) {
-            return new Response(JSON.stringify({ error: error.message }), {
-                status: 500,
-                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-            });
-        }
+    // CORS
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        headers: corsHeaders()
+      });
     }
+
+
+    const url = new URL(request.url);
+
+
+    // =========================
+    // ثبت کاربر
+    // =========================
+    if (url.pathname === "/api/register" && request.method === "POST") {
+
+      const data = await request.json();
+
+      const name = data.name;
+      const phone = data.phone;
+
+
+      if (!name || !phone) {
+        return json({
+          error: "نام و شماره الزامی است"
+        });
+      }
+
+
+      await env.DB.prepare(
+        `
+        INSERT INTO users
+        (name, phone, created_at)
+        VALUES (?, ?, datetime('now'))
+        ON CONFLICT(phone)
+        DO UPDATE SET name=excluded.name
+        `
+      )
+      .bind(name, phone)
+      .run();
+
+
+
+      return json({
+        success:true,
+        message:"کاربر ثبت شد"
+      });
+
+    }
+
+
+
+
+    // =========================
+    // ذخیره پیام
+    // =========================
+    if (url.pathname === "/api/save-chat" && request.method === "POST") {
+
+
+      const data = await request.json();
+
+
+      await env.DB.prepare(
+        `
+        INSERT INTO chats
+        (phone,user_message,bot_message,created_at)
+        VALUES (?,?,?,datetime('now'))
+        `
+      )
+      .bind(
+        data.phone,
+        data.user,
+        data.bot
+      )
+      .run();
+
+
+
+      return json({
+        success:true
+      });
+
+    }
+
+
+
+
+    // =========================
+    // دریافت تاریخچه کاربر
+    // =========================
+    if(url.pathname === "/api/history") {
+
+
+      const phone =
+      url.searchParams.get("phone");
+
+
+
+      const result =
+      await env.DB.prepare(
+        `
+        SELECT *
+        FROM chats
+        WHERE phone=?
+        ORDER BY id DESC
+        `
+      )
+      .bind(phone)
+      .all();
+
+
+
+      return json(result.results);
+
+    }
+
+
+
+
+    // =========================
+    // هوش مصنوعی Groq
+    // =========================
+    if(url.pathname === "/api/chat"
+    && request.method==="POST"){
+
+
+      const data =
+      await request.json();
+
+
+
+      const response =
+      await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json",
+            "Authorization":
+            "Bearer "+env.GROQ_API_KEY
+          },
+
+
+          body:JSON.stringify({
+
+            model:
+            "llama-3.3-70b-versatile",
+
+
+            messages:
+            data.messages,
+
+
+            temperature:0.7,
+
+
+            max_tokens:2048
+
+          })
+
+        });
+
+
+
+      const result =
+      await response.json();
+
+
+
+      return json(result);
+
+    }
+
+
+
+
+    return json({
+      status:"Oay Yaqin Worker Running"
+    });
+
+
+  }
 };
+
+
+
+
+
+// =========================
+// توابع کمکی
+// =========================
+
+
+function json(data){
+
+return new Response(
+JSON.stringify(data),
+{
+headers:{
+"Content-Type":"application/json",
+...corsHeaders()
+}
+});
+
+}
+
+
+
+function corsHeaders(){
+
+return {
+
+"Access-Control-Allow-Origin":"*",
+
+"Access-Control-Allow-Headers":
+"Content-Type",
+
+"Access-Control-Allow-Methods":
+"GET,POST,OPTIONS"
+
+};
+
+}
