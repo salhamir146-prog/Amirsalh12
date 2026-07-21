@@ -1,9 +1,8 @@
 // ============================================
-// اوای یقین - تنظیمات و شخصیت ربات (نسخه Cloudflare Pages)
+// اوای یقین - تنظیمات و شخصیت ربات
 // ============================================
 
 const CONFIG = {
-    // === تنظیمات پیش‌فرض ===
     APP_NAME: 'اوای یقین',
     APP_SUBTITLE: 'دستیار هوشمند مسجد حضرت ابوالفضل (ع)',
     CREATOR: 'امیر صالح جاودان',
@@ -13,13 +12,11 @@ const CONFIG = {
     MOSQUE_LOCATION: 'رودان، هرمزگان - ورودی شهر',
     ADMIN_PASSWORD: 'Amirsalh1234@1234v',
 
-    // === تنظیمات Proxy ===
-    // Cloudflare Pages Worker
-  // === تنظیمات Proxy ===
-USE_PROXY: true,
-PROXY_URL: 'https://amirsalh12.salhamir146.workers.dev',
+    // تنظیمات Proxy - همینطوری که بود
+    USE_PROXY: true,
+    PROXY_URL: '/api/chat',
 
-    // === پیکربندی API ها ===
+    // پیکربندی API ها
     PROVIDERS: {
         groq: {
             name: 'Groq',
@@ -28,52 +25,36 @@ PROXY_URL: 'https://amirsalh12.salhamir146.workers.dev',
                 { value: 'llama-3.3-70b-versatile', label: 'LLaMA 3.3 70B' },
                 { value: 'llama-3.1-8b-instant', label: 'LLaMA 3.1 8B' },
                 { value: 'mixtral-8x7b-32768', label: 'Mixtral 8x7B' },
-                { value: 'gemma2-9b-it', label: 'Gemma 2 9B' },
-                { value: 'llama-3.3-70b-specdec', label: 'LLaMA 3.3 70B SpecDec' },
-                { value: 'deepseek-r1-distill-llama-70b', label: 'DeepSeek R1 Distill' }
+                { value: 'gemma2-9b-it', label: 'Gemma 2 9B' }
             ],
-            defaultModel: 'llama-3.3-70b-versatile',
-            authPrefix: 'Bearer',
-            requestFormat: 'openai'
+            defaultModel: 'llama-3.3-70b-versatile'
         },
         openai: {
             name: 'OpenAI',
             url: 'https://api.openai.com/v1/chat/completions',
             models: [
                 { value: 'gpt-4o', label: 'GPT-4o' },
-                { value: 'gpt-4o-mini', label: 'GPT-4o Mini' },
-                { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
-                { value: 'gpt-4', label: 'GPT-4' },
-                { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo' }
+                { value: 'gpt-4o-mini', label: 'GPT-4o Mini' }
             ],
-            defaultModel: 'gpt-4o',
-            authPrefix: 'Bearer',
-            requestFormat: 'openai'
+            defaultModel: 'gpt-4o'
         },
         anthropic: {
             name: 'Anthropic (Claude)',
             url: 'https://api.anthropic.com/v1/messages',
             models: [
                 { value: 'claude-3-5-sonnet-20241022', label: 'Claude 3.5 Sonnet' },
-                { value: 'claude-3-opus-20240229', label: 'Claude 3 Opus' },
-                { value: 'claude-3-sonnet-20240229', label: 'Claude 3 Sonnet' },
                 { value: 'claude-3-haiku-20240307', label: 'Claude 3 Haiku' }
             ],
-            defaultModel: 'claude-3-5-sonnet-20241022',
-            authPrefix: 'x-api-key',
-            requestFormat: 'anthropic'
+            defaultModel: 'claude-3-5-sonnet-20241022'
         },
         google: {
             name: 'Google (Gemini)',
             url: 'https://generativelanguage.googleapis.com/v1beta/models/',
             models: [
                 { value: 'gemini-1.5-pro-latest', label: 'Gemini 1.5 Pro' },
-                { value: 'gemini-1.5-flash-latest', label: 'Gemini 1.5 Flash' },
-                { value: 'gemini-1.0-pro', label: 'Gemini 1.0 Pro' }
+                { value: 'gemini-1.5-flash-latest', label: 'Gemini 1.5 Flash' }
             ],
-            defaultModel: 'gemini-1.5-pro-latest',
-            authPrefix: 'key',
-            requestFormat: 'google'
+            defaultModel: 'gemini-1.5-pro-latest'
         },
         custom: {
             name: 'Custom / سفارشی',
@@ -81,19 +62,15 @@ PROXY_URL: 'https://amirsalh12.salhamir146.workers.dev',
             models: [
                 { value: 'custom-model', label: 'مدل سفارشی' }
             ],
-            defaultModel: 'custom-model',
-            authPrefix: 'Bearer',
-            requestFormat: 'openai'
+            defaultModel: 'custom-model'
         }
     },
 
-    // === تنظیمات پیش‌فرض API ===
     DEFAULT_PROVIDER: 'groq',
-DEFAULT_API_KEY: '',
-DEFAULT_MODEL: 'llama-3.3-70b-versatile',
-DEFAULT_URL: 'https://api.groq.com/openai/v1/chat/completions',
-    
-    // === تنظیمات پیش‌فرض پارامترها ===
+    DEFAULT_API_KEY: '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',
+    DEFAULT_MODEL: 'llama-3.3-70b-versatile',
+    DEFAULT_URL: 'https://api.groq.com/openai/v1/chat/completions',
+
     DEFAULT_TEMPERATURE: 0.7,
     DEFAULT_MAX_TOKENS: 2048,
     DEFAULT_TOP_P: 1.0,
@@ -101,7 +78,6 @@ DEFAULT_URL: 'https://api.groq.com/openai/v1/chat/completions',
     DEFAULT_PRESENCE_PENALTY: 0.0
 };
 
-// برای سازگاری با کد قدیمی
 CONFIG.API_KEY = CONFIG.DEFAULT_API_KEY;
 CONFIG.API_URL = CONFIG.DEFAULT_URL;
 CONFIG.MODEL = CONFIG.DEFAULT_MODEL;
