@@ -1,6 +1,6 @@
 // ============================================
-// اوای یقین - Cloudflare Worker
-// AI Proxy + Users + Chat Storage
+// اوای یقین - Cloudflare Worker Proxy
+// مسجد حضرت ابوالفضل (ع)
 // ============================================
 
 export default {
@@ -9,224 +9,143 @@ export default {
     // CORS
     if (request.method === "OPTIONS") {
       return new Response(null, {
-        headers: corsHeaders()
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type"
+        }
       });
     }
 
 
-    const url = new URL(request.url);
+    if (request.method !== "POST") {
+      return new Response(
+        JSON.stringify({
+          error: "Only POST requests are allowed"
+        }),
+        {
+          status: 405,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        }
+      );
+    }
 
 
-    // =========================
-    // ثبت کاربر
-    // =========================
-    if (url.pathname === "/api/register" && request.method === "POST") {
+    try {
 
       const data = await request.json();
 
-      const name = data.name;
-      const phone = data.phone;
+
+      const apiUrl =
+        data.apiUrl ||
+        "https://api.groq.com/openai/v1/chat/completions";
 
 
-      if (!name || !phone) {
-        return json({
-          error: "نام و شماره الزامی است"
-        });
+      const requestBody =
+        data.requestBody;
+
+
+      if (!requestBody) {
+        return new Response(
+          JSON.stringify({
+            error: "Request body missing"
+          }),
+          {
+            status:400,
+            headers:{
+              "Content-Type":"application/json",
+              "Access-Control-Allow-Origin":"*"
+            }
+          }
+        );
       }
 
 
-      await env.DB.prepare(
-        `
-        INSERT INTO users
-        (name, phone, created_at)
-        VALUES (?, ?, datetime('now'))
-        ON CONFLICT(phone)
-        DO UPDATE SET name=excluded.name
-        `
-      )
-      .bind(name, phone)
-      .run();
+
+      // گرفتن کلید از Cloudflare Variables
+      const apiKey = env.GROQ_API_KEY;
+
+
+      if (!apiKey) {
+
+        return new Response(
+          JSON.stringify({
+            error:"GROQ_API_KEY not configured"
+          }),
+          {
+            status:500,
+            headers:{
+              "Content-Type":"application/json",
+              "Access-Control-Allow-Origin":"*"
+            }
+          }
+        );
+
+      }
 
 
 
-      return json({
-        success:true,
-        message:"کاربر ثبت شد"
-      });
-
-    }
-
-
-
-
-    // =========================
-    // ذخیره پیام
-    // =========================
-    if (url.pathname === "/api/save-chat" && request.method === "POST") {
-
-
-      const data = await request.json();
-
-
-      await env.DB.prepare(
-        `
-        INSERT INTO chats
-        (phone,user_message,bot_message,created_at)
-        VALUES (?,?,?,datetime('now'))
-        `
-      )
-      .bind(
-        data.phone,
-        data.user,
-        data.bot
-      )
-      .run();
-
-
-
-      return json({
-        success:true
-      });
-
-    }
-
-
-
-
-    // =========================
-    // دریافت تاریخچه کاربر
-    // =========================
-    if(url.pathname === "/api/history") {
-
-
-      const phone =
-      url.searchParams.get("phone");
-
-
-
-      const result =
-      await env.DB.prepare(
-        `
-        SELECT *
-        FROM chats
-        WHERE phone=?
-        ORDER BY id DESC
-        `
-      )
-      .bind(phone)
-      .all();
-
-
-
-      return json(result.results);
-
-    }
-
-
-
-
-    // =========================
-    // هوش مصنوعی Groq
-    // =========================
-    if(url.pathname === "/api/chat"
-    && request.method==="POST"){
-
-
-      const data =
-      await request.json();
-
-
-
-      const response =
-      await fetch(
-        "https://api.groq.com/openai/v1/chat/completions",
+      const response = await fetch(
+        apiUrl,
         {
           method:"POST",
 
           headers:{
             "Content-Type":"application/json",
             "Authorization":
-            "Bearer "+env.GROQ_API_KEY
+              "Bearer " + apiKey
           },
 
-
-          body:JSON.stringify({
-
-            model:
-            "llama-3.3-70b-versatile",
-
-
-            messages:
-            data.messages,
-
-
-            temperature:0.7,
-
-
-            max_tokens:2048
-
-          })
-
-        });
+          body:
+            JSON.stringify(requestBody)
+        }
+      );
 
 
 
       const result =
-      await response.json();
+        await response.text();
 
 
 
-      return json(result);
+      return new Response(
+        result,
+        {
+          status:response.status,
+
+          headers:{
+            "Content-Type":"application/json",
+            "Access-Control-Allow-Origin":"*"
+          }
+        }
+      );
+
+
+
+    } catch(error){
+
+
+      return new Response(
+
+        JSON.stringify({
+          error:error.message
+        }),
+
+        {
+          status:500,
+
+          headers:{
+            "Content-Type":"application/json",
+            "Access-Control-Allow-Origin":"*"
+          }
+        }
+
+      );
 
     }
 
-
-
-
-    return json({
-      status:"Oay Yaqin Worker Running"
-    });
-
-
   }
 };
-
-
-
-
-
-// =========================
-// توابع کمکی
-// =========================
-
-
-function json(data){
-
-return new Response(
-JSON.stringify(data),
-{
-headers:{
-"Content-Type":"application/json",
-...corsHeaders()
-}
-});
-
-}
-
-
-
-function corsHeaders(){
-
-return {
-
-"Access-Control-Allow-Origin":"*",
-
-"Access-Control-Allow-Headers":
-"Content-Type",
-
-"Access-Control-Allow-Methods":
-"GET,POST,OPTIONS"
-
-};
-
-}
