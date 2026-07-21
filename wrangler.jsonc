@@ -1,14 +1,10 @@
 {
-  "name": "amirsalh12",
-  "main": "worker.js",
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "amirsalh123",
+  "main": "_worker.js",
   "compatibility_date": "2026-07-20",
-
   "assets": {
     "directory": ".",
     "not_found_handling": "single-page-application"
-  },
-
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  }
 }
