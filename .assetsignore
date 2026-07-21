@@ -1,36 +1,5 @@
-# فایل‌های node_modules رو حذف کن
-node_modules/
+node_modules
+.git
+.wrangler
 package-lock.json
-package.json
-bun.lockb
-yarn.lock
-
-# فایل‌های build
-dist/
-build/
-.cache/
-
-# فایل‌های سیستم
-.DS_Store
-Thumbs.db
-*.log
-
-# فایل‌های Wrangler
-.wrangler/
-**/workerd
-**/workerd.exe
-*.workerd
-.wrangler/
-wrangler.jsonc
-
-# فایل‌های Git
-.git/
-.gitignore
-.gitattributes
-
-# فایل‌های موقت
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
+bun.lock
